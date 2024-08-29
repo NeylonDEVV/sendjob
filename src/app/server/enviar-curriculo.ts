@@ -1,38 +1,28 @@
 'use server';
 
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend';
+import EmailTemplate from '../Components/template/email-template';
 
-export default async function enviarCurriculo(email: string, description: string, curriculo: File) {
-  const Empresas = ['empresa1@example.com', 'empresa2@example.com', 'empresa3@example.com']; // Substitua pelos emails das empresas que vão receber o currículo
+export default async function enviarCurriculo(nome: string, description: string) {
+  const empresas = ['neylondev@gmail.com']; // Substitua pelos e-mails das empresas que vão receber o currículo
 
-  // Configurar o transporter para usar o Gmail
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'seu-email@gmail.com', // Seu email
-      pass: 'sua-senha-de-aplicativo', // Sua senha de aplicativo (gerada nas configurações do Google)
-    },
-  });
+  const resend = new Resend('re_68GKtrjT_9cwqJrDyQ7ZqmnF15gELRjs6');
 
-  // Criar as opções do email
-  const mailOptions = {
-    from: email,
-    to: Empresas.join(','), // Enviar para todas as empresas na lista
-    subject: 'Novo Currículo Recebido',
-    text: description,
-    attachments: [
-      {
-        filename: curriculo.name,
-        content: curriculo, // O arquivo do currículo
-      },
-    ],
-  };
-
-  // Enviar o email
   try {
-    await transporter.sendMail(mailOptions as any);
-    console.log('Email enviado com sucesso');
+    for (const empresa of empresas) {
+      try {
+        await resend.emails.send({
+          from: 'delivered@resend.dev',
+          to: [empresa],
+          subject: 'Olá muito prazer meu nome é ' + nome,
+          react: EmailTemplate(description),
+        });
+        console.log(`Email enviado com sucesso para ${empresa}`);
+      } catch (error) {
+        console.error(`Erro ao enviar o email para ${empresa}:`, error);
+      }
+    }
   } catch (error) {
-    console.error('Erro ao enviar o email:', error);
+    console.error('Erro ao enviar os e-mails:', error);
   }
 }
