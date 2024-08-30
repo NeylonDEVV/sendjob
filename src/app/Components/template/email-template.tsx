@@ -1,4 +1,4 @@
-
+import { Markdown } from "@react-email/components";
 
 export default function EmailTemplate(description: string) {
   return (
