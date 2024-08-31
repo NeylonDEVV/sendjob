@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import formatPhone from '@/app/utils/formatNumber';
+import AddUrl from '../addurl/modal';
 
 export default function Stage1() {
   const [description, setDescription] = useState('');
@@ -47,6 +48,8 @@ export default function Stage1() {
     }
   }
 
+
+
   return (
     <div className="flex flex-col items-center p-6 bg-gray-900 shadow-blue-700 rounded-lg shadow-lg max-w-md mx-auto">
       <h1 className="text-4xl font-extrabold text-white mb-5">Bem-vindo(a)</h1>
@@ -88,6 +91,8 @@ export default function Stage1() {
       <button onClick={handlerSubmit} className="w-full mt-3 rounded-lg border-2 bg-green-600 p-4 text-white font-bold hover:bg-green-700 transition-colors">
         Enviar Currículo
       </button>
+
+      <AddUrl />
 
       {/* Contêiner do Toast */}
       <ToastContainer />
