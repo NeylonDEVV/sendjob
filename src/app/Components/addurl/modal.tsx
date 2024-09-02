@@ -2,34 +2,19 @@
 
 import { useState } from 'react'
 import { Button, Dialog, Flex } from '@radix-ui/themes'
+import { addEmpresa } from '@/app/server/empresa-service'
 
 export default function AddUrl() {
-  const [emails, setEmails] = useState<string[]>([])
-  const [newEmail, setNewEmail] = useState('')
+  const [email, setEmail] = useState('')
   const [isOpen, setIsOpen] = useState(false)
 
   const handleAddEmail = async () => {
     try {
-      const response = await fetch('/api/addEmpresa', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: newEmail }),
-      });
-
-      if (response.ok) {
-        const empresa = await response.json();
-        setEmails([...emails, empresa.email]);
-        setNewEmail('');
-        setIsOpen(false);
-      } else {
-        console.error('Failed to add email');
-      }
+      addEmpresa(email)
     } catch (error) {
-      console.error('Erro ao adicionar empresa:', error);
+      console.error('Erro ao adicionar empresa:', error)
     }
-  };
+  }
 
 
   return (
@@ -55,8 +40,8 @@ export default function AddUrl() {
           <Flex direction="column" gap="4">
             <input
               type="text"
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email da empresa"
               className="w-full rounded-lg mb-4 bg-[#292929] mt-4 text-sm px-4 py-3 font-bold text-[#c4c4c4]"
             />
