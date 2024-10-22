@@ -2,29 +2,37 @@
 
 import { Resend } from 'resend';
 import cron from 'node-cron';
-import EmailTemplate from '../Components/template/email-template';
+import EmailTemplate from '../src/app/Components/Template/email-basic';
 import { getEmpresasMany } from './empresa-service';
 
-export default async function scheduleEmail(nome: string, description: string, link: string, numero: string) {
-  const resend = new Resend('re_68GKtrjT_9cwqJrDyQ7ZqmnF15gELRjs6');
 
-  // Configura o cron job para rodar todos os dias às 9:00 AM
+interface ServiceProps {
+  nome: string;
+  description: string;
+  email: string;
+  link: string;
+  numero: string;
+}
+
+export default async function scheduleEmail({ nome, description, email, link, numero }: ServiceProps) {
+  const resend = new Resend('RESEND_API_KEY');
+
+
   cron.schedule('0 9 * * *', async () => {
     console.log('Enviando e-mails automáticos...');
 
     try {
-      const empresas = await getEmpresasMany(); // Obtém a lista de empresas
-      const emails = empresas.map(empresa => empresa.email); // Extrai os e-mails
+      const empresas = await getEmpresasMany();
+      const emails = empresas.map(empresa => empresa.email);
 
-      for (const email of emails) {
+      for (const emailEmpresas of emails) {
         try {
           await resend.emails.send({
-            from: 'delivered@resend.dev',
-            to: [email],
+            from: email,
+            to: [emailEmpresas],
             subject: `Olá, muito prazer. Meu nome é ${nome}`,
             react: EmailTemplate(description, link, numero),
           });
-          console.log(`Email enviado com sucesso para ${email}`);
         } catch (error) {
           console.error(`Erro ao enviar o email para ${email}:`, error);
         }

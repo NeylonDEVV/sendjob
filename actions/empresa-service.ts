@@ -1,7 +1,6 @@
 'use server';
-import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+import { prisma } from "../lib/prisma/prisma";
 
 export async function addEmpresa(email: string) {
   if (!email) {
